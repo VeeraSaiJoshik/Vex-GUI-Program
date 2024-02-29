@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import math
 def graphRPM(fileName):
     data = open(fileName)
     time = []
@@ -23,6 +24,7 @@ def graphRPM(fileName):
     #plt.plot(time, frontRightThrottle, c = "orange", lw = 1, linestyle = "--")
     plt.show()
 def graphPIDValues(fileName):
+    print("graphing")
     data = open(fileName)
     TimeList = []
     CurrentPositionList = []
@@ -34,32 +36,35 @@ def graphPIDValues(fileName):
     ErrorList = []
     for row in data : 
         Time, TargetThrottle, ActualThrottleLeftMotor, ActualThrottleRightMotor, ActualThrottleLeftBackMotor, ActualThorttleRightBackMotor, Error= row.split(',')
-        
         TimeList.append(float(Time))
         TargetThrottleList.append(float(TargetThrottle))
         ActualThrottleLeftMotorList.append(float(ActualThrottleLeftMotor))
         ActualThrottleRightMotorList.append(float(ActualThrottleRightMotor))
         ActualThrottleLeftBackMotorList.append(float(ActualThrottleLeftBackMotor))
         ActualThorttleRightBackMotorList.append(float(ActualThorttleRightBackMotor))
-        ErrorList.append(float(Error))
+        ErrorList.append(math.fabs(float(Error)))
 
+    #_, axis = plt.subplot(2, 4)
     
+    """axis[0][0].plot(TimeList, ErrorList, label='Current Position List', color='red')
+    axis[0][1].plot(TimeList, TargetThrottleList, label='Target Throttle', color='blue')
+    axis[0][2].plot(TimeList, ActualThrottleLeftMotorList, label='Front Left Throttle', color='green')
+    axis[0][3].plot(TimeList, ErrorList, label='Error', color='magenta')
+    axis[1][0].plot(TimeList, ActualThrottleRightMotorList, label='Front Right Throttle', color='black')
+    axis[1][1].plot(TimeList, ActualThrottleLeftBackMotorList, label='Back Left Throttle', color='orange')
+    axis[1][2].plot(TimeList, ActualThorttleRightBackMotorList, label='Back Right Throttle', color='hotpink')
+    axis[1][3].plot(TimeList, ErrorList, label='Error', color='magenta')"""
     
-    """axis[0][0].scatter(TimeList, ErrorList, label='Current Position List', color='red')
-    axis[0][1].scatter(TimeList, TargetThrottleList, label='Target Throttle', color='blue')
-    axis[0][2].scatter(TimeList, ActualThrottleLeftMotorList, label='Front Left Throttle', color='green')
-    axis[0][3].scatter(TimeList, ErrorList, label='Error', color='magenta')
-    axis[1][0].scatter(TimeList, ActualThrottleRightMotorList, label='Front Right Throttle', color='black')
-    axis[1][1].scatter(TimeList, ActualThrottleLeftBackMotorList, label='Back Left Throttle', color='orange')
-    axis[1][2].scatter(TimeList, ActualThorttleRightBackMotorList, label='Back Right Throttle', color='hotpink')
-    axis[1][3].scatter(TimeList, ErrorList, label='Error', color='magenta')"""
-    #plt.scatter(x=TimeList, y=TargetThrottleList)
-    plt.scatter(x=TimeList, y=ErrorList)
-    #plt.scatter(x=TimeList, y=ActualThrottleLeftBackMotorList)
+    plt.plot(TimeList, ErrorList, label = "error", color = "black")
+    
     classes = ['Target', 'Error', 'Actual Right Front']
+    
+    plt.xlabel("Time(ms)")
+    plt.ylabel("Error(deg)")  
+    
     plt.legend(labels=classes)
     plt.show()
-    plt.show()
+
 #graphRPM("data/RPM0to50.csv")
 val = input()
 graphPIDValues("data/rotateDataTest" + val + ".csv")
